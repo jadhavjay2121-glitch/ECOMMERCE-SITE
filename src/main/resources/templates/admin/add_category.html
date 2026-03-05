@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Add Category')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Add New Category</h2>
+
+                <div class="card" style="max-width: 600px;">
+                    <div class="card-body">
+                        <form th:action="@{/admin/categories/add}" th:object="${category}" method="post">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-bold">Category Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                    placeholder="Enter category name" required>
+                                <div class="text-danger mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Name error</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label fw-bold">Brief Description</label>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="4"
+                                    placeholder="Enter brief description for the category"></textarea>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save
+                                    Category</button>
+                                <a th:href="@{/admin/categories}" class="btn btn-secondary ms-2">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>
