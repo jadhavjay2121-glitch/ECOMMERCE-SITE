@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Simulate Review')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Simulate Customer Leaving Feedback</h2>
+
+                <div class="card" style="max-width: 800px;">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Mock a Verified Purchasers Review Pipeline</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/reviews/add}" th:object="${review}" method="post">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="customer" class="form-label fw-bold">Select Active Verified Customer
+                                        <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="customer" th:field="*{customer.id}" required>
+                                        <option value="" disabled selected>Identify the buyer...</option>
+                                        <option th:each="cust : ${customers}" th:value="${cust.id}"
+                                            th:text="${cust.firstName + ' ' + cust.lastName + ' (' + cust.email + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="product" class="form-label fw-bold">Select Purchased Item <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="product" th:field="*{product.id}" required>
+                                        <option value="" disabled selected>Identify the purchased product...</option>
+                                        <option th:each="prod : ${products}" th:value="${prod.id}"
+                                            th:text="${prod.name + ' - $' + prod.price}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="rating" class="form-label fw-bold">Star Rating Profile <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="rating" th:field="*{rating}" required>
+                                        <option value="5">5 - Excellent (Highly Recommend)</option>
+                                        <option value="4">4 - Good (Very Satisfied)</option>
+                                        <option value="3" selected>3 - Average (Okay)</option>
+                                        <option value="2">2 - Poor (Disappointed)</option>
+                                        <option value="1">1 - Terrible (Do Not Buy)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label for="reviewText" class="form-label fw-bold">Detailed Review Text Content (Max
+                                        1000 Chars)</label>
+                                    <textarea class="form-control" id="reviewText" th:field="*{reviewText}" rows="4"
+                                        maxlength="1000" placeholder="Type customer commentary here..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit
+                                    Review Data</button>
+                                <a th:href="@{/admin/reviews}" class="btn btn-secondary ms-2">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

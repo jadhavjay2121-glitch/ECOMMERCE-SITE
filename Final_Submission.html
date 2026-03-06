@@ -77,8 +77,8 @@
 
     <h1>Internship Assignment Submission</h1>
 
-    <p><strong>Modules Completed:</strong> Category, Product, Order, Customer, Payment, Cart, Wishlist, &amp; Shipping
-        Management<br>
+    <p><strong>Modules Completed:</strong> Category, Product, Order, Customer, Payment, Cart, Wishlist, Shipping, &amp;
+        Review Management<br>
         <strong>Candidate Name:</strong> Jay<br>
         <strong>Date:</strong> March 2026
     </p>
@@ -142,11 +142,18 @@
         records. It accurately models physical package status updates ("Pending", "Shipped", "In Transit", "Delivered")
         enabling final delivery receipt confirmation within the native app.</p>
 
-    <h3>2.9 Key Interface Features (Across all 8 Dashboards)</h3>
+    <h3>2.9 Review &amp; Rating Management Module</h3>
+    <p>The <strong>Review Management Module</strong> is built to cultivate verified qualitative feedback directly from
+        system buyers. It captures explicit integer arrays mapping 1-to-5 star values while aggregating user review
+        strings. An exclusive feature of this is its inherent Sandbox Moderation logic; newly submitted reviews
+        auto-flag as <em>False</em> (Hidden/Pending) and strictly require an Administrator to physically click to
+        <br><em>Approve</em> (Status = True) the payload before it ever becomes publicly rendered.</p>
+
+    <h3>2.10 Key Interface Features (Across all 9 Dashboards)</h3>
 
     <h4>A. Viewing Complex Data Arrays</h4>
     <ul>
-        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 8
+        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 9
             fully-functional dashboards.
         </li>
         <li>All grid views natively display item statistics with specialized visual badges. These dynamically capture
@@ -193,7 +200,7 @@
     </ul>
 
     <h3>Database Design Architecture Achieved</h3>
-    <p>Built fully matching all 8 structured requirements seamlessly:</p>
+    <p>Built fully matching all 9 structured requirements seamlessly:</p>
     <ul>
         <li>Mapped all Primary Keys (PK) and auto-increment indices using
             <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.
@@ -202,15 +209,17 @@
             <code>decimal(10,2)</code> database formats allowing massive transaction payloads without data overflow.
         </li>
         <li><code>status</code> fields successfully bound to global Boolean definitions allowing for universal
-            soft-deletions on records avoiding catastrophic mapping losses.
+            soft-deletions on records avoiding catastrophic mapping losses. For instance, the exact logic required for
+            Approval gates on <strong>Reviews</strong> triggers off boolean <code>status=true</code> parameters
+            flawlessly formatting the architecture shown.
         </li>
         <li>Deep Entity Binding established across domains. Using <code>@OneToMany</code> and <code>@ManyToOne</code>
             mapping logic, a single <code>user_id</code> cleanly orchestrates multiple Orders. A single
             <code>order_id</code> specifically connects explicit transaction records on both the
-            <strong>Payment</strong> and <strong>Shipping</strong> tables. Finally, <code>carts / wishlists</code>
-            utilize complex composite FK fetching over both <code>customer_id</code> and <code>product_id</code>
-            efficiently ensuring high-integrity relational links down the entire tree exactly matching all image specs!
-        </li>
+            <strong>Payment</strong> and <strong>Shipping</strong> tables. Finally, <code>carts</code>,
+            <code>wishlists</code>, &amp; <code>reviews</code> utilize complex composite FK fetching over both
+            <code>customer_id</code> and <code>product_id</code> efficiently ensuring high-integrity relational links
+            down the entire tree exactly matching all 9 image schemas explicitly!</li>
     </ul>
 
     <h3>Building and Testing Instructions</h3>

@@ -5,6 +5,7 @@ import com.ecommerce.model.Category;
 import com.ecommerce.model.Order;
 import com.ecommerce.model.Payment;
 import com.ecommerce.model.Product;
+import com.ecommerce.model.Review;
 import com.ecommerce.model.Shipping;
 import com.ecommerce.model.User;
 import com.ecommerce.model.Wishlist;
@@ -14,6 +15,7 @@ import com.ecommerce.repository.PaymentRepository;
 import com.ecommerce.repository.CartRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.ShippingRepository;
+import com.ecommerce.repository.ReviewRepository;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.repository.WishlistRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -29,7 +31,7 @@ public class SampleDataLoader {
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
             ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository,
             CartRepository cartRepository, WishlistRepository wishlistRepository,
-            ShippingRepository shippingRepository) {
+            ShippingRepository shippingRepository, ReviewRepository reviewRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -152,6 +154,24 @@ public class SampleDataLoader {
             s2.setShippingStatus("Delivered");
             s2.setShippingCost(new BigDecimal("8.00"));
             shippingRepository.save(s2);
+
+            // 10. Simulated Product Reviews
+            Review rev1 = new Review();
+            rev1.setProduct(prod);
+            rev1.setCustomer(customer2);
+            rev1.setRating(5);
+            rev1.setReviewText(
+                    "Absolutely love this high-end item. Shipping was fast through FedEx. Beautiful design.");
+            rev1.setStatus(true); // Public
+            reviewRepository.save(rev1);
+
+            Review rev2 = new Review();
+            rev2.setProduct(prod);
+            rev2.setCustomer(customer1);
+            rev2.setRating(2);
+            rev2.setReviewText("Box came slightly dented. Disappointed for the price tag, honestly.");
+            rev2.setStatus(false); // Pending moderation
+            reviewRepository.save(rev2);
 
             System.out.println("Mock Generation Database Mapping Complete.");
         };

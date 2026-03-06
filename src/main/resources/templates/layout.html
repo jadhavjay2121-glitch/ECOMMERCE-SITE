@@ -86,6 +86,9 @@
             <a href="/admin/shipping"
                 th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/shipping') ? 'active' : ''}"><i
                     class="fas fa-truck-loading me-2"></i> Logistics</a>
+            <a href="/admin/reviews"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/reviews') ? 'active' : ''}"><i
+                    class="fas fa-star me-2"></i> Public Reviews</a>
         </div>
     </div>
 

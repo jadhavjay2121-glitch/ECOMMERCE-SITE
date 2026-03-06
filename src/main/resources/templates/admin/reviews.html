@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Reviews')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Review &amp; Rating Moderation Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>Monitor Public Feedback Integrity</h4>
+                    <a href="/admin/reviews/add" class="btn btn-primary"><i class="fas fa-comment-dots"></i> Simulate
+                        New Review</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Review ID</th>
+                                        <th>Customer Identity</th>
+                                        <th>Target Product</th>
+                                        <th>Rating (1-5)</th>
+                                        <th style="max-width:300px;">Review Content</th>
+                                        <th>Public Status</th>
+                                        <th class="text-end">Moderation Controls</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="rev : ${reviews}">
+                                        <td class="fw-bold text-muted" th:text="'RVW-' + ${rev.id}"></td>
+
+                                        <td>
+                                            <span class="d-block fw-bold"
+                                                th:text="${rev.customer.firstName + ' ' + rev.customer.lastName}"></span>
+                                            <small class="text-muted" th:text="${rev.customer.email}"></small>
+                                        </td>
+
+                                        <td>
+                                            <a th:href="@{/admin/products}"
+                                                class="text-decoration-none badge text-bg-light border shadow-sm text-wrap"
+                                                th:text="${rev.product.name}"></a>
+                                        </td>
+
+                                        <td>
+                                            <span
+                                                th:class="${rev.rating >= 4 ? 'text-success fw-bold' : (rev.rating == 3 ? 'text-warning fw-bold' : 'text-danger fw-bold')}">
+                                                <i class="fas fa-star"
+                                                    th:each="i : ${#numbers.sequence(1, rev.rating)}"></i><i
+                                                    class="far fa-star text-muted opacity-50"
+                                                    th:each="i : ${#numbers.sequence(rev.rating + 1, 5)}"
+                                                    th:if="${rev.rating < 5}"></i>
+                                            </span>
+                                        </td>
+
+                                        <td style="max-width:300px;">
+                                            <p class="mb-0 text-truncate fst-italic" th:title="${rev.reviewText}"
+                                                th:text="${rev.reviewText}"></p>
+                                        </td>
+
+                                        <td>
+                                            <span th:if="${rev.status}" class="badge bg-success"><i
+                                                    class="fas fa-check-circle"></i> Approved / Public</span>
+                                            <span th:unless="${rev.status}" class="badge bg-danger"><i
+                                                    class="fas fa-ban"></i> Hidden / Flagged</span>
+                                        </td>
+
+                                        <td class="text-end text-nowrap">
+                                            <!-- Approve Action -->
+                                            <form th:if="${!rev.status}"
+                                                th:action="@{/admin/reviews/moderate/{id}(id=${rev.id})}" method="post"
+                                                class="d-inline">
+                                                <input type="hidden" name="status" value="true">
+                                                <button type="submit" class="btn btn-sm btn-outline-success"
+                                                    title="Approve for Public Product Page">
+                                                    <i class="fas fa-thumbs-up"></i> Approve
+                                                </button>
+                                            </form>
+                                            <!-- Reject Action -->
+                                            <form th:if="${rev.status}"
+                                                th:action="@{/admin/reviews/moderate/{id}(id=${rev.id})}" method="post"
+                                                class="d-inline">
+                                                <input type="hidden" name="status" value="false">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning"
+                                                    title="Hide from Public View">
+                                                    <i class="fas fa-thumbs-down"></i> Hide
+                                                </button>
+                                            </form>
+
+                                            <!-- Hard Delete -->
+                                            <form th:action="@{/admin/reviews/delete/{id}(id=${rev.id})}" method="post"
+                                                class="d-inline ms-1"
+                                                onsubmit="return confirm('Permanently delete this inappropriate review from the system?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    title="Purge Review">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(reviews)}">
+                                        <td colspan="7" class="text-center text-muted p-4">
+                                            <h4>No Product Feedback Collected Yet <i
+                                                    class="fas fa-comment-slash ms-2"></i></h4>
+                                            <p>Customers haven't submitted reviews after their purchases.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>
