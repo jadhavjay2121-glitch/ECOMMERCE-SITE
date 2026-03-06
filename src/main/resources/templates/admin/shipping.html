@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Shipping')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Logistics &amp; Shipping Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Logistics ID</th>
+                                        <th>Assigned Order</th>
+                                        <th>Courier Service</th>
+                                        <th>Tracking Number</th>
+                                        <th>Shipping Cost</th>
+                                        <th>Logistics Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="ship : ${shippings}"
+                                        th:classappend="${ship.shippingStatus == 'Delivered' ? 'table-success opacity-75' : ''}">
+                                        <td class="fw-bold" th:text="'SHP-' + ${ship.id}"></td>
+
+                                        <td>
+                                            <a th:href="@{/admin/orders}"
+                                                class="text-decoration-none border-bottom border-secondary pb-1"
+                                                th:text="'Order #' + ${ship.order.id}"></a>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge text-bg-light border shadow-sm"
+                                                th:text="${ship.courierService != null ? ship.courierService : 'Awaiting Assignment'}"></span>
+                                        </td>
+
+                                        <td class="font-monospace text-muted"
+                                            th:text="${ship.trackingNumber != null ? ship.trackingNumber : 'Pending...'}">
+                                        </td>
+
+                                        <td class="fw-bold text-secondary" th:text=" '$' + ${ship.shippingCost}"></td>
+
+                                        <td>
+                                            <span th:if="${ship.shippingStatus == 'Pending'}"
+                                                class="badge bg-secondary"><i class="fas fa-box"></i> Pending
+                                                Processing</span>
+                                            <span th:if="${ship.shippingStatus == 'Shipped'}"
+                                                class="badge bg-primary"><i class="fas fa-truck-loading"></i>
+                                                Shipped</span>
+                                            <span th:if="${ship.shippingStatus == 'In Transit'}"
+                                                class="badge bg-info text-dark"><i class="fas fa-shipping-fast"></i> In
+                                                Transit</span>
+                                            <span th:if="${ship.shippingStatus == 'Delivered'}"
+                                                class="badge bg-success"><i class="fas fa-box-open"></i>
+                                                Delivered</span>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <a th:href="@{/admin/shipping/edit/{id}(id=${ship.id})}"
+                                                class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i> Edit Logistics
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(shippings)}">
+                                        <td colspan="7" class="text-center text-muted p-4">
+                                            <h4>No Shipping Profiles Available <i class="fas fa-truck ms-2"></i></h4>
+                                            <p>Shipment trackers populate when orders hit our logistics queue.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

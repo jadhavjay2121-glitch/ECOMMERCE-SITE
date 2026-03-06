@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Edit Shipping details')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Update Logistics Information</h2>
+
+                <div class="card" style="max-width: 800px;">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Shipping Entry <span th:text="'SHP-' + ${shipping.id}"></span> For <a
+                                th:href="@{/admin/orders}" th:text="'Order #' + ${shipping.order.id}"></a></h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/shipping/edit/{id}(id=${shipping.id})}" th:object="${shipping}"
+                            method="post">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="courierService" class="form-label fw-bold">Courier Service <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="courierService"
+                                        th:field="*{courierService}" placeholder="e.g. FedEx, UPS, DHL" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="trackingNumber" class="form-label fw-bold">Tracking Number <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="trackingNumber"
+                                        th:field="*{trackingNumber}" placeholder="Enter Tracking Payload" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="shippingStatus" class="form-label fw-bold">Logistics Status <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="shippingStatus" th:field="*{shippingStatus}"
+                                        required>
+                                        <option value="Pending">Pending Processing</option>
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="In Transit">In Transit</option>
+                                        <option value="Delivered">Delivered</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="shippingCost" class="form-label fw-bold">Calculated Rate ($) <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" class="form-control" id="shippingCost"
+                                        th:field="*{shippingCost}" required>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Push Logistics
+                                    Update</button>
+                                <a th:href="@{/admin/shipping}" class="btn btn-secondary ms-2">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

@@ -83,6 +83,9 @@
             <a href="/admin/wishlists"
                 th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/wishlists') ? 'active' : ''}"><i
                     class="fas fa-heart me-2"></i> Wishlists</a>
+            <a href="/admin/shipping"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/shipping') ? 'active' : ''}"><i
+                    class="fas fa-truck-loading me-2"></i> Logistics</a>
         </div>
     </div>
 

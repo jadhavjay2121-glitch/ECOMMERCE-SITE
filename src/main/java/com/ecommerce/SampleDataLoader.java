@@ -5,6 +5,7 @@ import com.ecommerce.model.Category;
 import com.ecommerce.model.Order;
 import com.ecommerce.model.Payment;
 import com.ecommerce.model.Product;
+import com.ecommerce.model.Shipping;
 import com.ecommerce.model.User;
 import com.ecommerce.model.Wishlist;
 import com.ecommerce.repository.CategoryRepository;
@@ -12,6 +13,7 @@ import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.repository.PaymentRepository;
 import com.ecommerce.repository.CartRepository;
 import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.repository.ShippingRepository;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.repository.WishlistRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +28,8 @@ public class SampleDataLoader {
     @Bean
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
             ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository,
-            CartRepository cartRepository, WishlistRepository wishlistRepository) {
+            CartRepository cartRepository, WishlistRepository wishlistRepository,
+            ShippingRepository shippingRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -132,6 +135,23 @@ public class SampleDataLoader {
             w1.setCustomer(customer2);
             w1.setProduct(prod);
             wishlistRepository.save(w1);
+
+            // 9. Simulated Shipping Labels mapped onto explicitly closed Orders
+            Shipping s1 = new Shipping();
+            s1.setOrder(o1);
+            s1.setCourierService("FedEx");
+            s1.setTrackingNumber("FX1093JDA444");
+            s1.setShippingStatus("In Transit");
+            s1.setShippingCost(new BigDecimal("12.50"));
+            shippingRepository.save(s1);
+
+            Shipping s2 = new Shipping();
+            s2.setOrder(o2);
+            s2.setCourierService("UPS");
+            s2.setTrackingNumber("1Z9999999999999999");
+            s2.setShippingStatus("Delivered");
+            s2.setShippingCost(new BigDecimal("8.00"));
+            shippingRepository.save(s2);
 
             System.out.println("Mock Generation Database Mapping Complete.");
         };
