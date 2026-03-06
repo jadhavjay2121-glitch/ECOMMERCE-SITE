@@ -60,9 +60,14 @@
     <div th:fragment="sidebar">
         <div class="sidebar">
             <h5 class="px-3">Menu</h5>
-            <a href="#"><i class="fas fa-home me-2"></i> Dashboard</a>
-            <a href="/admin/categories" class="active"><i class="fas fa-list me-2"></i> Categories</a>
-            <a href="#"><i class="fas fa-box me-2"></i> Products</a>
+            <a href="#" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}"><i
+                    class="fas fa-home me-2"></i> Dashboard</a>
+            <a href="/admin/categories"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/categories') ? 'active' : ''}"><i
+                    class="fas fa-list me-2"></i> Categories</a>
+            <a href="/admin/products"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/products') ? 'active' : ''}"><i
+                    class="fas fa-box me-2"></i> Products</a>
             <a href="#"><i class="fas fa-shopping-cart me-2"></i> Orders</a>
         </div>
     </div>

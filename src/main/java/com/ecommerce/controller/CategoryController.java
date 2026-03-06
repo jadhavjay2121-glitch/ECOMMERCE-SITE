@@ -25,15 +25,16 @@ public class CategoryController {
     private ProductRepository productRepository;
 
     // Record for simple DTO representing category with its calculated product count
-    public record CategoryWithCount(Category category, long productCount) {}
+    public record CategoryWithCount(Category category, long productCount) {
+    }
 
     @GetMapping
     public String listCategories(Model model) {
         List<Category> activeCategories = categoryRepository.findByStatusOrderByCreatedAtDesc("active");
         List<CategoryWithCount> categoriesWithCount = new ArrayList<>();
-        
+
         for (Category cat : activeCategories) {
-            long count = productRepository.countByCategoryIdAndStatus(cat.getId(), "active");
+            long count = productRepository.countByCategoryIdAndStatus(cat.getId(), true);
             categoriesWithCount.add(new CategoryWithCount(cat, count));
         }
 
@@ -48,7 +49,8 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public String saveCategory(@Valid @ModelAttribute("category") Category category, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String saveCategory(@Valid @ModelAttribute("category") Category category, BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "admin/add_category";
         }
@@ -69,7 +71,9 @@ public class CategoryController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateCategory(@PathVariable("id") Long id, @Valid @ModelAttribute("category") Category updatedCategory, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String updateCategory(@PathVariable("id") Long id,
+            @Valid @ModelAttribute("category") Category updatedCategory, BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "admin/edit_category";
         }
@@ -85,9 +89,10 @@ public class CategoryController {
 
     @PostMapping("/delete/{id}")
     public String deleteCategory(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        long productCount = productRepository.countByCategoryIdAndStatus(id, "active");
+        long productCount = productRepository.countByCategoryIdAndStatus(id, true);
         if (productCount > 0) {
-            redirectAttributes.addFlashAttribute("error_msg", "Warning: Cannot deactivate category. Please assign its " + productCount + " product(s) to a new category first.");
+            redirectAttributes.addFlashAttribute("error_msg", "Warning: Cannot deactivate category. Please assign its "
+                    + productCount + " product(s) to a new category first.");
             return "redirect:/admin/categories";
         }
 
