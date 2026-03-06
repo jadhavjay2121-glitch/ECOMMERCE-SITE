@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Add to Cart')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Simulate Adding To Customer Cart</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="card" style="max-width: 800px;">
+                    <div class="card-body">
+                        <form th:action="@{/admin/carts/add}" th:object="${cart}" method="post">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="customer" class="form-label fw-bold">Select Active Customer <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="customer" th:field="*{customer.id}" required>
+                                        <option value="" disabled selected>Choose customer...</option>
+                                        <option th:each="cust : ${customers}" th:value="${cust.id}"
+                                            th:text="${cust.firstName + ' ' + cust.lastName + ' (' + cust.email + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="product" class="form-label fw-bold">Select Store Product <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="product" th:field="*{product.id}" required>
+                                        <option value="" disabled selected>Choose available product...</option>
+                                        <option th:each="prod : ${products}" th:value="${prod.id}"
+                                            th:text="${prod.name + ' - $' + prod.price + ' (In Stock: ' + prod.inventoryCount + ')'}"
+                                            th:disabled="${prod.inventoryCount <= 0}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="quantity" class="form-label fw-bold">Desired Quantity <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="quantity" th:field="*{quantity}"
+                                        min="1" value="1" required>
+                                    <small class="text-muted">Total valid price is calculated automatically.</small>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-cart-plus"></i> Add Item
+                                    to Cart Array</button>
+                                <a th:href="@{/admin/carts}" class="btn btn-secondary ms-2">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

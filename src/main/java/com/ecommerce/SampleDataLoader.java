@@ -2,10 +2,14 @@ package com.ecommerce;
 
 import com.ecommerce.model.Order;
 import com.ecommerce.model.Payment;
+import com.ecommerce.model.Category;
+import com.ecommerce.model.Cart;
+import com.ecommerce.model.Product;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.repository.PaymentRepository;
+import com.ecommerce.repository.CartRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +23,8 @@ public class SampleDataLoader {
 
     @Bean
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
-            ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository) {
+            ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository,
+            CartRepository cartRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -91,6 +96,34 @@ public class SampleDataLoader {
             p3.setPaymentMethod("Debit Card");
             p3.setPaymentStatus("Refunded");
             paymentRepository.save(p3);
+
+            // 6. Provide mock Category and Product to seed Carts
+            Category cat = new Category();
+            if (categoryRepository.count() == 0) {
+                cat.setName("Electronics");
+                categoryRepository.save(cat);
+            } else {
+                cat = categoryRepository.findAll().get(0);
+            }
+
+            Product prod = new Product();
+            if (productRepository.count() == 0) {
+                prod.setName("Sample High-End Laptop");
+                prod.setCategory(cat);
+                prod.setPrice(new BigDecimal("1499.00"));
+                prod.setInventoryCount(50);
+                productRepository.save(prod);
+            } else {
+                prod = productRepository.findAll().get(0);
+            }
+
+            // 7. Simulated Cart items for Abandonment viewing
+            Cart c1 = new Cart();
+            c1.setCustomer(customer1);
+            c1.setProduct(prod);
+            c1.setQuantity(2);
+            c1.setTotalPrice(prod.getPrice().multiply(new BigDecimal(2)));
+            cartRepository.save(c1);
 
             System.out.println("Mock Generation Database Mapping Complete.");
         };

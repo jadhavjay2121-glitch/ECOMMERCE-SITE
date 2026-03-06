@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Carts')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Cart Management Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>Customer Active Carts (Abandonment Analysis)</h4>
+                    <a href="/admin/carts/add" class="btn btn-primary"><i class="fas fa-cart-plus"></i> Simulate Add to
+                        Cart</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cart ID</th>
+                                        <th>Customer</th>
+                                        <th>Product Item</th>
+                                        <th>Unit Price</th>
+                                        <th>Qty (Update)</th>
+                                        <th>Total Price</th>
+                                        <th>Date Added</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cart : ${carts}">
+                                        <td class="fw-bold" th:text="'#' + ${cart.id}"></td>
+
+                                        <td>
+                                            <span class="d-block"
+                                                th:text="${cart.customer.firstName + ' ' + cart.customer.lastName}"></span>
+                                            <small class="text-muted" th:text="${cart.customer.email}"></small>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge text-bg-light border"
+                                                th:text="${cart.product.name}"></span>
+                                        </td>
+
+                                        <td class="text-secondary" th:text="'$' + ${cart.product.price}"></td>
+
+                                        <td>
+                                            <form th:action="@{/admin/carts/update/{id}(id=${cart.id})}" method="post"
+                                                class="d-flex align-items-center" style="max-width: 130px;">
+                                                <input type="number" name="quantity"
+                                                    class="form-control form-control-sm me-1"
+                                                    th:value="${cart.quantity}" min="1" required>
+                                                <button type="submit" class="btn btn-sm btn-outline-info"
+                                                    title="Update Quantity">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                        <td class="fw-bold text-success" th:text=" '$' + ${cart.totalPrice}"></td>
+
+                                        <td th:text="${#temporals.format(cart.createdAt, 'MMM dd, HH:mm')}"></td>
+
+                                        <td class="text-end">
+                                            <form th:action="@{/admin/carts/remove/{id}(id=${cart.id})}" method="post"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Remove this item from the cart?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash-alt"></i> Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(carts)}">
+                                        <td colspan="8" class="text-center text-muted p-4">
+                                            <h4>No Items in Any Carts <i class="fas fa-shopping-basket ms-2"></i></h4>
+                                            <p>Customers haven't browsed yet.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>
