@@ -1,9 +1,11 @@
 package com.ecommerce;
 
 import com.ecommerce.model.Order;
+import com.ecommerce.model.Payment;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.OrderRepository;
+import com.ecommerce.repository.PaymentRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +19,7 @@ public class SampleDataLoader {
 
     @Bean
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
-            ProductRepository productRepository, OrderRepository orderRepository) {
+            ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -68,7 +70,29 @@ public class SampleDataLoader {
             o3.setStatus(false);
             orderRepository.save(o3);
 
-            System.out.println("Mock Orders Generation Complete.");
+            // 5. Mock Associated Payments
+            Payment p1 = new Payment();
+            p1.setOrder(o1);
+            p1.setAmount(new BigDecimal("199.99"));
+            p1.setPaymentMethod("Credit Card");
+            p1.setPaymentStatus("Paid");
+            paymentRepository.save(p1);
+
+            Payment p2 = new Payment();
+            p2.setOrder(o2);
+            p2.setAmount(new BigDecimal("950.50"));
+            p2.setPaymentMethod("PayPal");
+            p2.setPaymentStatus("Paid");
+            paymentRepository.save(p2);
+
+            Payment p3 = new Payment();
+            p3.setOrder(o3);
+            p3.setAmount(new BigDecimal("49.95"));
+            p3.setPaymentMethod("Debit Card");
+            p3.setPaymentStatus("Refunded");
+            paymentRepository.save(p3);
+
+            System.out.println("Mock Generation Database Mapping Complete.");
         };
     }
 }

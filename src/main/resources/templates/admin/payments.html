@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Payment Transactions')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Payment Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Linked Order</th>
+                                        <th>Amount</th>
+                                        <th>Payment Method</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Administrative Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="payment : ${payments}"
+                                        th:classappend="${payment.paymentStatus == 'Refunded' ? 'table-warning opacity-75' : ''}">
+                                        <td class="fw-bold" th:text="'#' + ${payment.id}"></td>
+
+                                        <td>
+                                            <a th:href="@{/admin/orders}"
+                                                class="text-decoration-none border-bottom border-secondary pb-1"
+                                                th:text="'Order #' + ${payment.order.id}"></a>
+                                        </td>
+
+                                        <td class="fw-bold text-success" th:text=" '$' + ${payment.amount}"></td>
+
+                                        <td>
+                                            <span class="badge text-bg-light border shadow-sm"
+                                                th:text="${payment.paymentMethod}"></span>
+                                        </td>
+
+                                        <td>
+                                            <span th:if="${payment.paymentStatus == 'Paid'}" class="badge bg-success"><i
+                                                    class="fas fa-check-circle"></i> Paid</span>
+                                            <span th:if="${payment.paymentStatus == 'Failed'}"
+                                                class="badge bg-danger"><i class="fas fa-times-circle"></i>
+                                                Failed</span>
+                                            <span th:if="${payment.paymentStatus == 'Refunded'}"
+                                                class="badge bg-warning text-dark"><i class="fas fa-undo"></i>
+                                                Refunded</span>
+                                            <span th:if="${payment.paymentStatus == 'Pending'}"
+                                                class="badge bg-secondary"><i class="fas fa-clock"></i> Pending</span>
+                                        </td>
+
+                                        <td th:text="${#temporals.format(payment.createdAt, 'MMM dd, yyyy HH:mm')}">
+                                        </td>
+
+                                        <td class="text-end">
+                                            <form th:if="${payment.paymentStatus == 'Paid'}"
+                                                th:action="@{/admin/payments/refund/{id}(id=${payment.id})}"
+                                                method="post" class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to trigger a payment refund? This action is administrative and will update the transaction records.');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-reply"></i> Issue Refund
+                                                </button>
+                                            </form>
+                                            <button th:if="${payment.paymentStatus == 'Refunded'}"
+                                                class="btn btn-sm btn-secondary" disabled>Refunded</button>
+                                            <button
+                                                th:if="${payment.paymentStatus == 'Failed' || payment.paymentStatus == 'Pending'}"
+                                                class="btn btn-sm btn-secondary" disabled>No Action Required</button>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(payments)}">
+                                        <td colspan="7" class="text-center text-muted p-4">
+                                            <h4>No Transaction Data Found <i class="fas fa-receipt ms-2"></i></h4>
+                                            <p>Payments will appear here automatically when orders are processed
+                                                externally.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

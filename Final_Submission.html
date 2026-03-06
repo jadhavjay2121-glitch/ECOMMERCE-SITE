@@ -77,10 +77,9 @@
 
     <h1>Internship Assignment Submission</h1>
 
-    <p><strong>Modules Completed:</strong> Category, Product, Order &amp; Customer Management<br>
+    <p><strong>Modules Completed:</strong> Category, Product, Order, Customer, &amp; Payment Management<br>
         <strong>Candidate Name:</strong> Jay<br>
         <strong>Date:</strong> March 2026
-    </p>
     </p>
 
     <div class="box">
@@ -117,11 +116,17 @@
         individual's total order history. It includes rigorous tools for modifying contact data and safely
         soft-deleting/deactivating idle accounts without compromising historical sales reporting.</p>
 
-    <h3>2.5 Key Interface Features (Across all Dashboards)</h3>
+    <h3>2.5 Payment Management Module</h3>
+    <p>The <strong>Payment Management Module</strong> handles explicit transaction handling mapped natively to system
+        Orders. It acts as an integration interface to view external gateway status. The dashboard clearly logs payment
+        methods (Credit/Debit/PayPal), their processed statuses, and includes a strict one-way trigger for issuing
+        manual Refunds.</p>
+
+    <h3>2.6 Key Interface Features (Across all 5 Dashboards)</h3>
 
     <h4>A. Viewing Complex Data Arrays</h4>
     <ul>
-        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 4 dashboards.
+        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 5 dashboards.
         </li>
         <li>All grid views natively display item statistics with specialized visual badges. These dynamically capture
             Boolean database triggers (Active/Inactive), warn about critical inventory (triggering low-stock warnings at
@@ -167,16 +172,19 @@
     </ul>
 
     <h3>Database Design Architecture Achieved</h3>
-    <p>Built fully matching all 4 structured requirements:</p>
+    <p>Built fully matching all 5 structured requirements:</p>
     <ul>
         <li>Mapped all Primary Keys (PK) and auto-increment indices using
-            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.</li>
+            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.
+        </li>
         <li><code>prices</code> and <code>amounts</code> mapped precisely via <code>decimal(10,2)</code> formats.</li>
-        <li><code>status</code> successfully bound to global Boolean definitions allowing for universal soft-deletions.
+        <li><code>status</code> fields successfully bound to global Boolean definitions allowing for universal
+            soft-deletions on records.
         </li>
         <li>Deep Entity Binding established across domains. Using <code>@OneToMany</code> and <code>@ManyToOne</code>
-            logic, a User's <code>user_id</code> cleanly orchestrates multiple Orders, mapping seamlessly with data
-            fetching strategies.</li>
+            mapping logic, a single <code>user_id</code> cleanly orchestrates multiple Orders, and a single
+            <code>order_id</code> specifically connects explicit transaction records on the Payment table with
+            <code>FetchType.LAZY</code> yielding extreme performance.</li>
     </ul>
 
     <h3>Building and Testing Instructions</h3>
