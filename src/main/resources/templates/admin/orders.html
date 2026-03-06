@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Orders')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Order Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="card mb-4">
+                    <div class="card-body p-3">
+                        <form th:action="@{/admin/orders}" method="get" class="row gx-3 align-items-center">
+                            <div class="col-auto">
+                                <label class="col-form-label fw-bold"><i class="fas fa-filter text-muted"></i> Filter by
+                                    Status:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select name="statusFilter" class="form-select form-select-sm"
+                                    onchange="this.form.submit()">
+                                    <option value="All"
+                                        th:selected="${currentFilter == 'All' || currentFilter == null}">All Orders
+                                    </option>
+                                    <option value="Pending" th:selected="${currentFilter == 'Pending'}">Pending</option>
+                                    <option value="Shipped" th:selected="${currentFilter == 'Shipped'}">Shipped</option>
+                                    <option value="Delivered" th:selected="${currentFilter == 'Delivered'}">Delivered
+                                    </option>
+                                    <option value="Cancelled" th:selected="${currentFilter == 'Cancelled'}">Cancelled
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer ID</th>
+                                        <th>Shipping Address</th>
+                                        <th>Total Price</th>
+                                        <th>Order Activity</th>
+                                        <th>System Logic</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="order : ${orders}"
+                                        th:classappend="${order.orderStatus == 'Cancelled' ? 'table-secondary opacity-75' : ''}">
+                                        <td class="fw-bold" th:text="'#' + ${order.id}"></td>
+
+                                        <td>
+                                            <span class="d-block"
+                                                th:text="${order.customer != null ? order.customer.name : 'Unknown User'}"></span>
+                                            <small class="text-muted"
+                                                th:text="'ID: ' + ${order.customer != null ? order.customer.id : 'N/A'}"></small>
+                                        </td>
+
+                                        <td>
+                                            <span class="d-inline-block text-truncate" style="max-width: 250px;"
+                                                th:text="${order.shippingAddress}"
+                                                title="${order.shippingAddress}"></span>
+                                        </td>
+
+                                        <td class="fw-bold text-success" th:text=" '$' + ${order.totalAmount}"></td>
+
+                                        <td>
+                                            <span th:if="${order.orderStatus == 'Pending'}"
+                                                class="badge bg-warning text-dark"><i class="fas fa-clock"></i>
+                                                Pending</span>
+                                            <span th:if="${order.orderStatus == 'Shipped'}" class="badge bg-primary"><i
+                                                    class="fas fa-truck"></i> Shipped</span>
+                                            <span th:if="${order.orderStatus == 'Delivered'}"
+                                                class="badge bg-success"><i class="fas fa-check-circle"></i>
+                                                Delivered</span>
+                                            <span th:if="${order.orderStatus == 'Cancelled'}" class="badge bg-danger"><i
+                                                    class="fas fa-times-circle"></i> Cancelled</span>
+                                        </td>
+
+                                        <td>
+                                            <span th:if="${order.status}"
+                                                class="badge text-bg-light border border-secondary shadow-sm">True
+                                                (Active)</span>
+                                            <span th:unless="${order.status}"
+                                                class="badge text-bg-dark opacity-50 shadow-none"><del>False
+                                                    (Cancelled)</del></span>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <!-- Update Status Form -->
+                                            <form th:if="${order.orderStatus != 'Cancelled'}"
+                                                th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"
+                                                method="post" class="d-inline me-2">
+                                                <select name="newStatus"
+                                                    class="form-select form-select-sm d-inline-block w-auto"
+                                                    onchange="this.form.submit()">
+                                                    <option value="" disabled selected>Update...</option>
+                                                    <option value="Pending"
+                                                        th:disabled="${order.orderStatus == 'Pending'}">Pending</option>
+                                                    <option value="Shipped"
+                                                        th:disabled="${order.orderStatus == 'Shipped'}">Shipped</option>
+                                                    <option value="Delivered"
+                                                        th:disabled="${order.orderStatus == 'Delivered'}">Delivered
+                                                    </option>
+                                                </select>
+                                            </form>
+
+                                            <!-- Soft Deletion / Cancel Button Form -->
+                                            <form
+                                                th:unless="${order.orderStatus == 'Shipped' || order.orderStatus == 'Delivered' || order.orderStatus == 'Cancelled'}"
+                                                th:action="@{/admin/orders/cancel/{id}(id=${order.id})}" method="post"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to cancel this order? This will mark the system DB status to False.');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    title="Cancel Order">
+                                                    <i class="fas fa-times"></i> Cancel &amp; Delete
+                                                </button>
+                                            </form>
+                                            <button th:if="${order.orderStatus == 'Cancelled'}"
+                                                class="btn btn-sm btn-secondary" disabled><i class="fas fa-ban"></i>
+                                                Soft Deleted</button>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(orders)}">
+                                        <td colspan="7" class="text-center text-muted p-4">
+                                            <h4>No Orders Found <i class="fas fa-box-open ms-2"></i></h4>
+                                            <p>Adjust your filter or wait for customer checkout.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+    <script>
+        // Initialize tooltips truncates
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+</body>
+
+</html>

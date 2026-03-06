@@ -1,0 +1,72 @@
+package com.ecommerce;
+
+import com.ecommerce.model.Category;
+import com.ecommerce.model.Order;
+import com.ecommerce.model.Product;
+import com.ecommerce.model.User;
+import com.ecommerce.repository.CategoryRepository;
+import com.ecommerce.repository.OrderRepository;
+import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.math.BigDecimal;
+
+@Configuration
+public class SampleDataLoader {
+
+    @Bean
+    CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
+            ProductRepository productRepository, OrderRepository orderRepository) {
+        return args -> {
+
+            // Check if DB is already seeded
+            if (userRepository.count() > 0)
+                return;
+
+            System.out.println("SEEDING START DATA FOR VIEWING ORDERS...");
+
+            // 1. Create Mock Customer
+            User customer1 = new User();
+            customer1.setName("John Doe");
+            customer1.setEmail("john@example.com");
+            userRepository.save(customer1);
+
+            User customer2 = new User();
+            customer2.setName("Jane Smith");
+            customer2.setEmail("jane@sample.com");
+            userRepository.save(customer2);
+
+            // 2. Mock Order #1
+            Order o1 = new Order();
+            o1.setCustomer(customer1);
+            o1.setShippingAddress("123 Elm St, New York, NY");
+            o1.setTotalAmount(new BigDecimal("199.99"));
+            o1.setOrderStatus("Pending");
+            o1.setStatus(true);
+            orderRepository.save(o1);
+
+            // 3. Mock Order #2
+            Order o2 = new Order();
+            o2.setCustomer(customer2);
+            o2.setShippingAddress("456 Oak Avenue, Austin, TX");
+            o2.setTotalAmount(new BigDecimal("950.50"));
+            o2.setOrderStatus("Shipped");
+            o2.setStatus(true);
+            orderRepository.save(o2);
+
+            // 4. Mock Order #3 (Cancelled)
+            Order o3 = new Order();
+            o3.setCustomer(customer1);
+            o3.setShippingAddress("123 Elm St, New York, NY");
+            o3.setTotalAmount(new BigDecimal("49.95"));
+            o3.setOrderStatus("Cancelled");
+            o3.setStatus(false);
+            orderRepository.save(o3);
+
+            System.out.println("Mock Orders Generation Complete.");
+        };
+    }
+}
