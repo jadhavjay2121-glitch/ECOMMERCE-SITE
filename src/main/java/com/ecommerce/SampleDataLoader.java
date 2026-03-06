@@ -1,17 +1,19 @@
 package com.ecommerce;
 
+import com.ecommerce.model.Cart;
+import com.ecommerce.model.Category;
 import com.ecommerce.model.Order;
 import com.ecommerce.model.Payment;
-import com.ecommerce.model.Category;
-import com.ecommerce.model.Cart;
 import com.ecommerce.model.Product;
 import com.ecommerce.model.User;
+import com.ecommerce.model.Wishlist;
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.repository.PaymentRepository;
 import com.ecommerce.repository.CartRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.UserRepository;
+import com.ecommerce.repository.WishlistRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +26,7 @@ public class SampleDataLoader {
     @Bean
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
             ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository,
-            CartRepository cartRepository) {
+            CartRepository cartRepository, WishlistRepository wishlistRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -124,6 +126,12 @@ public class SampleDataLoader {
             c1.setQuantity(2);
             c1.setTotalPrice(prod.getPrice().multiply(new BigDecimal(2)));
             cartRepository.save(c1);
+
+            // 8. Simulated Wishlist Items
+            Wishlist w1 = new Wishlist();
+            w1.setCustomer(customer2);
+            w1.setProduct(prod);
+            wishlistRepository.save(w1);
 
             System.out.println("Mock Generation Database Mapping Complete.");
         };

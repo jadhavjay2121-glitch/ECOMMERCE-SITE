@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Add to Wishlist')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Simulate Adding To Customer Wishlist</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="card" style="max-width: 800px;">
+                    <div class="card-body">
+                        <form th:action="@{/admin/wishlists/add}" th:object="${wishlist}" method="post">
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="customer" class="form-label fw-bold">Select Active Customer <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="customer" th:field="*{customer.id}" required>
+                                        <option value="" disabled selected>Choose customer...</option>
+                                        <option th:each="cust : ${customers}" th:value="${cust.id}"
+                                            th:text="${cust.firstName + ' ' + cust.lastName + ' (' + cust.email + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="product" class="form-label fw-bold">Select Store Product (Interest)
+                                        <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="product" th:field="*{product.id}" required>
+                                        <option value="" disabled selected>Choose product of interest...</option>
+                                        <option th:each="prod : ${products}" th:value="${prod.id}"
+                                            th:text="${prod.name + ' - $' + prod.price + ' (In Stock: ' + prod.inventoryCount + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-heart"></i> Add Item to
+                                    Wishlist</button>
+                                <a th:href="@{/admin/wishlists}" class="btn btn-secondary ms-2">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

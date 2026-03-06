@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Wishlists')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Customer Wishlists Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>Track Customer Product Interests</h4>
+                    <a href="/admin/wishlists/add" class="btn btn-primary"><i class="fas fa-heart"></i> Simulate Add to
+                        Wishlist</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>List ID</th>
+                                        <th>Customer</th>
+                                        <th>Product Item</th>
+                                        <th>Price</th>
+                                        <th>Availability Status</th>
+                                        <th>Date Added</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="wish : ${wishlists}">
+                                        <td class="fw-bold" th:text="'#' + ${wish.id}"></td>
+
+                                        <td>
+                                            <span class="d-block"
+                                                th:text="${wish.customer.firstName + ' ' + wish.customer.lastName}"></span>
+                                            <small class="text-muted" th:text="${wish.customer.email}"></small>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge text-bg-light border shadow-sm"
+                                                th:text="${wish.product.name}"></span>
+                                        </td>
+
+                                        <td class="text-secondary" th:text="'$' + ${wish.product.price}"></td>
+
+                                        <td>
+                                            <span th:if="${wish.product.inventoryCount > 0 && wish.product.status}"
+                                                class="badge bg-success"><i class="fas fa-check-circle"></i> In
+                                                Stock</span>
+                                            <span th:unless="${wish.product.inventoryCount > 0 && wish.product.status}"
+                                                class="badge bg-danger"><i class="fas fa-times-circle"></i> Out of Stock
+                                                / Inactive</span>
+                                        </td>
+
+                                        <td th:text="${#temporals.format(wish.createdAt, 'MMM dd, HH:mm')}"></td>
+
+                                        <td class="text-end">
+                                            <!-- Move to Cart Form -->
+                                            <form th:action="@{/admin/wishlists/move-to-cart/{id}(id=${wish.id})}"
+                                                method="post" class="d-inline me-2"
+                                                onsubmit="return confirm('Move this product from the Wishlist directly into the Customer\'s Cart?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-success"
+                                                    th:disabled="${!(wish.product.inventoryCount > 0 && wish.product.status)}">
+                                                    <i class="fas fa-cart-plus"></i> Move to Cart
+                                                </button>
+                                            </form>
+                                            <!-- Remove Form -->
+                                            <form th:action="@{/admin/wishlists/remove/{id}(id=${wish.id})}"
+                                                method="post" class="d-inline"
+                                                onsubmit="return confirm('Remove this product from the wishlist?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    title="Remove">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(wishlists)}">
+                                        <td colspan="7" class="text-center text-muted p-4">
+                                            <h4>No Products Wishlisted <i class="far fa-heart ms-2"></i></h4>
+                                            <p>Customers haven't saved any items for later.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>
