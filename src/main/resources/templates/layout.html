@@ -71,6 +71,9 @@
             <a href="/admin/orders"
                 th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/orders') ? 'active' : ''}"><i
                     class="fas fa-shopping-cart me-2"></i> Orders</a>
+            <a href="/admin/customers"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/customers') ? 'active' : ''}"><i
+                    class="fas fa-users me-2"></i> Customers</a>
         </div>
     </div>
 

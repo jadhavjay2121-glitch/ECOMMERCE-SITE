@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Customers')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Manage Customers</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>All Customers</h4>
+                    <a href="/admin/customers/add" class="btn btn-primary"><i class="fas fa-plus"></i> Add New
+                        Customer</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Orders History</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="customer : ${customers}">
+                                        <td th:text="${customer.id}"></td>
+                                        <td class="fw-bold" th:text="${customer.firstName + ' ' + customer.lastName}">
+                                        </td>
+                                        <td>
+                                            <a th:href="'mailto:' + ${customer.email}" th:text="${customer.email}"
+                                                class="text-decoration-none border-bottom border-primary pb-1"></a>
+                                        </td>
+                                        <td
+                                            th:text="${customer.phone != null && !customer.phone.isEmpty() ? customer.phone : 'N/A'}">
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary rounded-pill"
+                                                th:text="${customer.orders != null ? customer.orders.size() : '0'} + ' Orders'"></span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success" th:if="${customer.status}">Active</span>
+                                            <span class="badge bg-danger" th:unless="${customer.status}">Inactive</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a th:href="@{/admin/customers/edit/{id}(id=${customer.id})}"
+                                                class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <form th:if="${customer.status}"
+                                                th:action="@{/admin/customers/deactivate/{id}(id=${customer.id})}"
+                                                method="post" class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to logically delete/deactivate this customer? Their previous order history will be preserved.');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-user-times"></i> Deactivate
+                                                </button>
+                                            </form>
+                                            <button th:unless="${customer.status}" class="btn btn-sm btn-secondary"
+                                                disabled>Deactivated</button>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(customers)}">
+                                        <td colspan="7" class="text-center text-muted">No customers registered yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

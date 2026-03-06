@@ -1,8 +1,6 @@
 package com.ecommerce;
 
-import com.ecommerce.model.Category;
 import com.ecommerce.model.Order;
-import com.ecommerce.model.Product;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.OrderRepository;
@@ -30,12 +28,16 @@ public class SampleDataLoader {
 
             // 1. Create Mock Customer
             User customer1 = new User();
-            customer1.setName("John Doe");
+            customer1.setFirstName("John");
+            customer1.setLastName("Doe");
+            customer1.setPhone("555-0198");
             customer1.setEmail("john@example.com");
             userRepository.save(customer1);
 
             User customer2 = new User();
-            customer2.setName("Jane Smith");
+            customer2.setFirstName("Jane");
+            customer2.setLastName("Smith");
+            customer2.setPhone("555-0199");
             customer2.setEmail("jane@sample.com");
             userRepository.save(customer2);
 

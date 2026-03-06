@@ -77,9 +77,10 @@
 
     <h1>Internship Assignment Submission</h1>
 
-    <p><strong>Modules Completed:</strong> Category Management &amp; Product Management<br>
+    <p><strong>Modules Completed:</strong> Category, Product, Order &amp; Customer Management<br>
         <strong>Candidate Name:</strong> Jay<br>
         <strong>Date:</strong> March 2026
+    </p>
     </p>
 
     <div class="box">
@@ -93,28 +94,38 @@
         </ul>
     </div>
 
-    <h2>2. End-User Documentation: Category &amp; Product Modules</h2>
+    <h2>2. End-User Documentation: Comprehensive Module Walkthrough</h2>
 
-    <h3>2.1 Category Management Module Overview</h3>
+    <h3>2.1 Category Management Module</h3>
     <p>The <strong>Category Management Module</strong> enables administrators to organize products into distinct
         hierarchies. It provides functionality to view, create, edit, and safely deactivate categories while keeping
         track of current product allocations securely.</p>
 
-    <h3>2.2 Product Management Module Overview</h3>
+    <h3>2.2 Product Management Module</h3>
     <p>The <strong>Product Management Module</strong> is essential for managing the e-commerce platform's active
         inventory. It allows administrators to add, modify, and deactivate products while keeping real-time track of
         inventory stock levels, SKUs, and associated pricing structures.</p>
 
-    <h3>2.3 Key Interface Functionalities</h3>
+    <h3>2.3 Order Management Module</h3>
+    <p>The <strong>Order Management Module</strong> facilitates the processing and tracking of customer orders. It
+        enables administrators to view all orders natively tied to customers, filter orders smoothly via real-time
+        status drop-downs, and securely update order pipelines (from Pending -> Shipped -> Delivered).</p>
 
-    <h4>A. Viewing Data</h4>
+    <h3>2.4 Customer Management Module</h3>
+    <p>The <strong>Customer Management Module</strong> is critical for managing user data. It securely tracks personal
+        information (Names, Contacts, Emails) and allows administrators to directly view the aggregated sum of an
+        individual's total order history. It includes rigorous tools for modifying contact data and safely
+        soft-deleting/deactivating idle accounts without compromising historical sales reporting.</p>
+
+    <h3>2.5 Key Interface Features (Across all Dashboards)</h3>
+
+    <h4>A. Viewing Complex Data Arrays</h4>
     <ul>
-        <li>Administrators can navigate using the left-hand sidebar to both the <strong>Categories</strong> and
-            <strong>Products</strong> dashboard.
+        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 4 dashboards.
         </li>
-        <li>The dashboard grids natively display item statistics, current active/inactive <code>status</code> via
-            Boolean database columns mapped to badges, and available stock/inventory levels (triggering a low-stock
-            warning icon if inventory drops to 5 or below).</li>
+        <li>All grid views natively display item statistics with specialized visual badges. These dynamically capture
+            Boolean database triggers (Active/Inactive), warn about critical inventory (triggering low-stock warnings at
+            &lt;= 5), and showcase dynamic order delivery cycles.</li>
     </ul>
 
     <h4>B. Adding and Modifying Entities</h4>
@@ -156,15 +167,16 @@
     </ul>
 
     <h3>Database Design Architecture Achieved</h3>
-    <p>As per the product table constraints required:</p>
+    <p>Built fully matching all 4 structured requirements:</p>
     <ul>
-        <li>Mapped PKs and auto-increment indices using
-            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.
+        <li>Mapped all Primary Keys (PK) and auto-increment indices using
+            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.</li>
+        <li><code>prices</code> and <code>amounts</code> mapped precisely via <code>decimal(10,2)</code> formats.</li>
+        <li><code>status</code> successfully bound to global Boolean definitions allowing for universal soft-deletions.
         </li>
-        <li><code>price</code> set to <code>decimal(10,2)</code> precision.</li>
-        <li><code>status</code> successfully configured as native Boolean definitions.</li>
-        <li>Foreign Keys effectively linked utilizing <code>@ManyToOne</code> data fetching strategies resulting in
-            high-performance cross-table mappings.</li>
+        <li>Deep Entity Binding established across domains. Using <code>@OneToMany</code> and <code>@ManyToOne</code>
+            logic, a User's <code>user_id</code> cleanly orchestrates multiple Orders, mapping seamlessly with data
+            fetching strategies.</li>
     </ul>
 
     <h3>Building and Testing Instructions</h3>
