@@ -86,7 +86,8 @@
         <h2>1. Assignment Links</h2>
         <ul>
             <li><strong>GitHub Repository Link:</strong> <a
-                    href="https://github.com/Jay/ecommerce-project">https://github.com/Jay/ecommerce-project</a></li>
+                    href="https://github.com/jadhavjay2121-glitch/ECOMMERCE-SITE">https://github.com/jadhavjay2121-glitch/ECOMMERCE-SITE</a>
+            </li>
             <li><strong>Live Server Deployment URL:</strong> <a href="#">(Awaiting free server linking, currently runs
                     natively via Maven Spring Boot)</a></li>
         </ul>
@@ -109,7 +110,8 @@
     <h4>A. Viewing Data</h4>
     <ul>
         <li>Administrators can navigate using the left-hand sidebar to both the <strong>Categories</strong> and
-            <strong>Products</strong> dashboard.</li>
+            <strong>Products</strong> dashboard.
+        </li>
         <li>The dashboard grids natively display item statistics, current active/inactive <code>status</code> via
             Boolean database columns mapped to badges, and available stock/inventory levels (triggering a low-stock
             warning icon if inventory drops to 5 or below).</li>
@@ -157,7 +159,8 @@
     <p>As per the product table constraints required:</p>
     <ul>
         <li>Mapped PKs and auto-increment indices using
-            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.</li>
+            <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.
+        </li>
         <li><code>price</code> set to <code>decimal(10,2)</code> precision.</li>
         <li><code>status</code> successfully configured as native Boolean definitions.</li>
         <li>Foreign Keys effectively linked utilizing <code>@ManyToOne</code> data fetching strategies resulting in
@@ -170,7 +173,8 @@ cd ecommerce-project
 mvn clean install
 mvn spring-boot:run</code></pre>
     <p>Once started, access the application by navigating any standard web-browser to
-        <code>http://localhost:8080/admin/categories</code> to visualize the implemented workflows.</p>
+        <code>http://localhost:8080/admin/categories</code> to visualize the implemented workflows.
+    </p>
 
 </body>
 
