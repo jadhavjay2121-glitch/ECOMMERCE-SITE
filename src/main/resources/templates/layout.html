@@ -89,6 +89,9 @@
             <a href="/admin/reviews"
                 th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/reviews') ? 'active' : ''}"><i
                     class="fas fa-star me-2"></i> Public Reviews</a>
+            <a href="/admin/coupons"
+                th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/coupons') ? 'active' : ''}"><i
+                    class="fas fa-tags me-2"></i> Active Coupons</a>
         </div>
     </div>
 

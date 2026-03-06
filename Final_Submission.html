@@ -77,8 +77,9 @@
 
     <h1>Internship Assignment Submission</h1>
 
-    <p><strong>Modules Completed:</strong> Category, Product, Order, Customer, Payment, Cart, Wishlist, Shipping, &amp;
-        Review Management<br>
+    <p><strong>Modules Completed:</strong> Category, Product, Order, Customer, Payment, Cart, Wishlist, Shipping,
+        Review, &amp;
+        Coupon Management<br>
         <strong>Candidate Name:</strong> Jay<br>
         <strong>Date:</strong> March 2026
     </p>
@@ -147,14 +148,22 @@
         system buyers. It captures explicit integer arrays mapping 1-to-5 star values while aggregating user review
         strings. An exclusive feature of this is its inherent Sandbox Moderation logic; newly submitted reviews
         auto-flag as <em>False</em> (Hidden/Pending) and strictly require an Administrator to physically click to
-        <br><em>Approve</em> (Status = True) the payload before it ever becomes publicly rendered.</p>
+        <br><em>Approve</em> (Status = True) the payload before it ever becomes publicly rendered.
+    </p>
 
-    <h3>2.10 Key Interface Features (Across all 9 Dashboards)</h3>
+    <h3>2.10 Coupon &amp; Discount Management Module</h3>
+    <p>The <strong>Coupon Management Module</strong> completes the 10-module deployment criteria! It establishes rigid
+        validation loops allowing the administration team to build dynamic checkout overrides on-the-fly. They can
+        specify unique <code>coupon_codes</code> ("WELCOME20", "FLASHSALE"), choose explicit `discount_types`
+        (Percentage or Fixed amount), and set exact `datetime` validity pools before saving them. Active tracking flags
+        visually grey out any inactive or expired codes so that active pools are instantly recognizable.</p>
+
+    <h3>2.11 Key Interface Features (Across all 10 Dashboards)</h3>
 
     <h4>A. Viewing Complex Data Arrays</h4>
     <ul>
-        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 9
-            fully-functional dashboards.
+        <li>Administrators can navigate seamlessly using the unified left-hand sidebar to jump between all 10
+            fully-functional dashboards mapping every systemic schema fully!.
         </li>
         <li>All grid views natively display item statistics with specialized visual badges. These dynamically capture
             Boolean database triggers (Active/Inactive), warn about critical inventory (triggering low-stock warnings at
@@ -200,18 +209,20 @@
     </ul>
 
     <h3>Database Design Architecture Achieved</h3>
-    <p>Built fully matching all 9 structured requirements seamlessly:</p>
+    <p>Built fully matching all 10 structured requirements seamlessly:</p>
     <ul>
         <li>Mapped all Primary Keys (PK) and auto-increment indices using
             <code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code>.
         </li>
-        <li><code>prices</code>, <code>amounts</code>, and <code>shipping_cost</code> mapped precisely via
+        <li><code>prices</code>, <code>amounts</code>, <code>shipping_cost</code>, &amp; <code>discount_values</code>
+            mapped precisely via
             <code>decimal(10,2)</code> database formats allowing massive transaction payloads without data overflow.
         </li>
         <li><code>status</code> fields successfully bound to global Boolean definitions allowing for universal
             soft-deletions on records avoiding catastrophic mapping losses. For instance, the exact logic required for
             Approval gates on <strong>Reviews</strong> triggers off boolean <code>status=true</code> parameters
-            flawlessly formatting the architecture shown.
+            flawlessly formatting the architecture shown. Similar Boolean toggling cleanly governs Soft-Deleted
+            <strong>Coupons</strong> on explicit clicks!
         </li>
         <li>Deep Entity Binding established across domains. Using <code>@OneToMany</code> and <code>@ManyToOne</code>
             mapping logic, a single <code>user_id</code> cleanly orchestrates multiple Orders. A single
@@ -219,7 +230,8 @@
             <strong>Payment</strong> and <strong>Shipping</strong> tables. Finally, <code>carts</code>,
             <code>wishlists</code>, &amp; <code>reviews</code> utilize complex composite FK fetching over both
             <code>customer_id</code> and <code>product_id</code> efficiently ensuring high-integrity relational links
-            down the entire tree exactly matching all 9 image schemas explicitly!</li>
+            down the entire tree exactly matching all 10 distinct image schemas perfectly!
+        </li>
     </ul>
 
     <h3>Building and Testing Instructions</h3>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout :: head('Manage Coupons')}"></head>
+
+<body>
+
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 p-0">
+                <div th:replace="~{layout :: sidebar}"></div>
+            </div>
+
+            <div class="col-md-10 content">
+                <h2 class="mb-4">Coupon &amp; Discount Code Dashboard</h2>
+
+                <div th:replace="~{layout :: alerts}"></div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>Active Promotions &amp; Checkouts</h4>
+                    <a href="/admin/coupons/add" class="btn btn-primary"><i class="fas fa-ticket-alt"></i> Generate New
+                        Coupon</a>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Code (Identifier)</th>
+                                        <th>Discount Profile</th>
+                                        <th>Activity Window (From/To)</th>
+                                        <th>Usage Pool</th>
+                                        <th>Status (Soft Delete)</th>
+                                        <th class="text-end">Administrative Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="coupon : ${coupons}"
+                                        th:classappend="${!coupon.status} ? 'table-secondary opacity-75' : ''">
+                                        <td class="fw-bold fs-5 text-primary">
+                                            <i class="fas fa-barcode text-muted me-1"></i> <span
+                                                th:text="${coupon.couponCode}"></span>
+                                        </td>
+
+                                        <td>
+                                            <span class="d-block fw-bold" th:text="${coupon.discountType}"></span>
+                                            <span class="text-muted" th:if="${coupon.discountType == 'Fixed Amount'}"
+                                                th:text="'-$' + ${coupon.discountValue}"></span>
+                                            <span class="text-muted" th:if="${coupon.discountType == 'Percentage'}"
+                                                th:text="${coupon.discountValue + '% OFF'}"></span>
+                                        </td>
+
+                                        <td>
+                                            <small class="d-block text-muted"><i class="far fa-calendar-check me-1"></i>
+                                                <span
+                                                    th:text="${#temporals.format(coupon.validFrom, 'MMM dd, yyyy HH:mm')}"></span></small>
+                                            <small class="d-block text-muted"><i class="far fa-calendar-times me-1"></i>
+                                                <span
+                                                    th:text="${#temporals.format(coupon.validTo, 'MMM dd, yyyy HH:mm')}"></span></small>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge border border-secondary text-secondary"
+                                                th:text="${coupon.usageLimit != null ? coupon.usageLimit + ' uses remaining' : 'Unlimited Uses'}"></span>
+                                        </td>
+
+                                        <td>
+                                            <span th:if="${coupon.status}"
+                                                class="badge bg-success rounded-pill px-3 shadow-sm"><i
+                                                    class="fas fa-check"></i> Active</span>
+                                            <span th:unless="${coupon.status}"
+                                                class="badge bg-danger rounded-pill px-3 shadow-sm"><i
+                                                    class="fas fa-ban"></i> Inactive (Soft Deleted)</span>
+                                        </td>
+
+                                        <td class="text-end text-nowrap">
+                                            <a th:href="@{/admin/coupons/edit/{id}(id=${coupon.id})}"
+                                                class="btn btn-sm btn-outline-primary" title="Edit Configuration">
+                                                <i class="fas fa-sliders-h"></i>
+                                            </a>
+                                            <form th:action="@{/admin/coupons/toggle/{id}(id=${coupon.id})}"
+                                                method="post" class="d-inline ms-1" onchange="this.submit()">
+                                                <button type="submit"
+                                                    th:classappend="${coupon.status} ? 'btn-outline-danger' : 'btn-outline-success'"
+                                                    class="btn btn-sm"
+                                                    th:title="${coupon.status} ? 'Deactivate Coupon' : 'Reactivate Coupon'">
+                                                    <i class="fas"
+                                                        th:classappend="${coupon.status} ? 'fa-power-off' : 'fa-bolt'"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(coupons)}">
+                                        <td colspan="6" class="text-center text-muted p-5">
+                                            <h4>No Promotional Codes Exist <i class="fas fa-ghost ms-2"></i></h4>
+                                            <p>Click "Generate New Coupon" to start incentivizing your checkouts.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+
+</html>

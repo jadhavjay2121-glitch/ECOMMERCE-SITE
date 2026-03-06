@@ -2,6 +2,7 @@ package com.ecommerce;
 
 import com.ecommerce.model.Cart;
 import com.ecommerce.model.Category;
+import com.ecommerce.model.Coupon;
 import com.ecommerce.model.Order;
 import com.ecommerce.model.Payment;
 import com.ecommerce.model.Product;
@@ -10,6 +11,7 @@ import com.ecommerce.model.Shipping;
 import com.ecommerce.model.User;
 import com.ecommerce.model.Wishlist;
 import com.ecommerce.repository.CategoryRepository;
+import com.ecommerce.repository.CouponRepository;
 import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.repository.PaymentRepository;
 import com.ecommerce.repository.CartRepository;
@@ -31,7 +33,8 @@ public class SampleDataLoader {
     CommandLineRunner loadSampleData(UserRepository userRepository, CategoryRepository categoryRepository,
             ProductRepository productRepository, OrderRepository orderRepository, PaymentRepository paymentRepository,
             CartRepository cartRepository, WishlistRepository wishlistRepository,
-            ShippingRepository shippingRepository, ReviewRepository reviewRepository) {
+            ShippingRepository shippingRepository, ReviewRepository reviewRepository,
+            CouponRepository couponRepository) {
         return args -> {
 
             // Check if DB is already seeded
@@ -172,6 +175,27 @@ public class SampleDataLoader {
             rev2.setReviewText("Box came slightly dented. Disappointed for the price tag, honestly.");
             rev2.setStatus(false); // Pending moderation
             reviewRepository.save(rev2);
+
+            // 11. Simulated Database Discount Pipelines
+            Coupon cpn1 = new Coupon();
+            cpn1.setCouponCode("WELCOME20");
+            cpn1.setDiscountType("Percentage");
+            cpn1.setDiscountValue(new BigDecimal("20.00"));
+            cpn1.setValidFrom(java.time.LocalDateTime.now().minusDays(1));
+            cpn1.setValidTo(java.time.LocalDateTime.now().plusDays(30));
+            cpn1.setUsageLimit(500);
+            cpn1.setStatus(true);
+            couponRepository.save(cpn1);
+
+            Coupon cpn2 = new Coupon();
+            cpn2.setCouponCode("MINUS50");
+            cpn2.setDiscountType("Fixed Amount");
+            cpn2.setDiscountValue(new BigDecimal("50.00"));
+            cpn2.setValidFrom(java.time.LocalDateTime.now().minusDays(10));
+            cpn2.setValidTo(java.time.LocalDateTime.now().minusDays(2)); // purposefully expired date
+            cpn2.setUsageLimit(100);
+            cpn2.setStatus(false); // soft deleted/inactive
+            couponRepository.save(cpn2);
 
             System.out.println("Mock Generation Database Mapping Complete.");
         };
